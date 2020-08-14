@@ -1,3 +1,4 @@
+
 # OOP questions
 
 ## Software design
@@ -171,37 +172,276 @@ Automatic garbage collection is the process of looking at heap memory, identifyi
 ### Procedural
 
 #### What is casting? What is the difference between up vs downcasting?
+Upcasting is casting to a supertype, while downcasting is casting to a subtype. Upcasting is always allowed, but downcasting involves a type check and can throw a ClassCastException.
+
+Downcasting would be something like this:
+``` java
+Animal animal = new Dog();
+Dog castedDog = (Dog) animal;
+```
+
+Basically what you're doing is telling the compiler that you know what the runtime type of the object really is. The compiler will allow the conversion, but will still insert a runtime sanity check to make sure that the conversion makes sense. In this case, the cast is possible because at runtime animal is actually a Dog even though the static type of animal is Animal.
+
+However, if you were to do this:
+```java
+Animal animal = new Animal();
+Dog notADog = (Dog) animal;
+```
+
+You'd get a ClassCastException. The reason why is because animal's runtime type is Animal, and so when you tell the runtime to perform the cast it sees that animal isn't really a Dog and so throws a ClassCastException.
+
+![alt text](https://i.stack.imgur.com/Lkn0S.png "Upcastings vs downcasting")
+
 #### Which order should we catch the exceptions? Why?
+The order is whatever matches first, gets executed. If the first catch matches the exception, it executes, if it doesn't, the next one is tried and on and on until one is matched or none are. If the exceptions have parent-child relationship, the catch blocks must be sorted by the most specific exceptions first, then by the most general ones. So, when catching exceptions you want to always catch the most specific first and then the most generic (as RuntimeException or Exception).
 
 ### Object-oriented
 
 #### What is a class?
+In summary, in object oriented programming, each object has three dimensions: identity, attributes, and behavior. 
+Attributes describe the object's current state, and what the object is capable of doing is demonstrated through the object's behavior.
+
+A class describes what the object will be, but is separate from the object itself. In other words, classes can be described as blueprints, descriptions, or definitions for an object. You can use the same class as a blueprint for creating multiple objects (it's called instantiation - is the realization of a predefined object). The first step is to define the class, which then becomes a blueprint for object creation. Each class has a name, and each is used to define attributes and behavior. In other words, an object is an instance of a class.
+
+A class has attributes and methods.
+- Methods: Methods define behavior. A method is a collection of statements that are grouped together to perform an operation.
+- The attributes are basically variables within a class.
+
+![alt text](http://sce2.umkc.edu/BIT/burrise/pl/oop/car-objects.gif "Object")
+
 #### What is an object?
+Software objects are conceptually similar to real-world objects: they consist of state and behavior. An object stores its state in fields (variables in some programming languages) and exposes its behavior through methods (functions in some programming languages). Methods operate on an object's internal state and serve as the primary mechanism for object-to-object communication. Hiding internal state and requiring all interaction to be performed through an object's methods is known as data encapsulation — a fundamental principle of object-oriented programming.
+
+Bundling code into individual software objects provides a number of benefits, including:
+
+- Modularity: The source code for an object can be written and maintained independently of the source code for other objects. Once created, an object can be easily passed around inside the system.
+- Information-hiding: By interacting only with an object's methods, the details of its internal implementation remain hidden from the outside world.
+- Code re-use: If an object already exists (perhaps written by another software developer), you can use that object in your program.
+- Pluggability and debugging ease: If a particular object turns out to be problematic, you can simply remove it from your application and plug in a different object as its replacement.
+
+![alt text](https://docs.oracle.com/javase/tutorial/figures/java/concepts-object.gif "Object")
+
 #### What is a constructor?
+Constructors are special methods invoked when an object is created and are used to initialize them. A constructor can be used to provide initial values for object attributes. A constructor name must be the same as its class name. A constructor must have no explicit return type. You can think of constructors as methods that will set up your class by default, so you don’t need to repeat the same code every time. The constructor is called when you create an object using the new keyword. A single class can have multiple constructors with different numbers of parameters. Java automatically provides a default constructor, so all classes have a constructor, whether one is specifically defined or not.
+
+**Constructor Overloading:**<br>
+Sometimes there is a need of initializing an object in different ways. This can be done using constructor overloading. Overloaded constructor is called based upon the parameters specified when new is executed. If we want to have different ways of initializing an object using different number of parameters, then we must do constructor overloading.
+
+![alt text](https://static.javatpoint.com/images/core/java-constructor.png "Constructor")
+
 #### Do we require parameter for constructors?
+A constructor should establish the initial invariant of your object, that is, put it in a valid and usable state. If it's impossible to provide all the information needed up-front to construct your object properly, you may want to consider some sort of builder to gather state incrementally before instantiating the object. You should favor parameterless constructors. Typically, the constructor initializes the fields of the object that need initialization. Java constructors can also take parameters, so fields can be initialized in the object at creation time.
+
 #### What is an interface?
+An interface is a completely abstract class that contains only abstract methods.
+
+**Some specifications for interfaces:**<br>
+- Defined using the interface keyword.
+- May contain only static final variables.
+- Cannot contain a constructor because interfaces cannot be instantiated.
+- Interfaces can extend other interfaces.
+- A class can implement any number of interfaces.
+
+**An example of a simple interface:**<br>
+```java
+interface Animal {
+    public void eat();
+    public void makeSound();
+}
+```
+Interfaces have the following properties:
+- An interface is implicitly abstract. You do not need to use the abstract keyword while declaring an interface.
+- Each method in an interface is also implicitly abstract, so the abstract keyword is not needed.
+- Methods in an interface are implicitly public.
+- A class can inherit from just one superclass, but can implement multiple interfaces!
+- When you implement an interface, you need to override all of its methods.
+
+Use the implements keyword to use an interface with your class.
+```java
+interface Animal {
+    public void eat();
+    public void makeSound();
+}
+
+class Cat implements Animal {
+    public void makeSound() {
+        System.out.println("Meow");
+    }
+    public void eat() {
+        System.out.println("omnomnom");
+    }
+}
+```
+
 #### What are access modifiers?
+Access modifiers in Java helps to restrict the scope of a class, constructor, variable, method or data member. Access level modifiers determine whether other classes can use a particular field or invoke a particular method. There are two levels of access control:
+
+- At the top level—public, or package-private (no explicit modifier).
+- At the member level—public, private, protected, or package-private (no explicit modifier).
+
+A class may be declared with the modifier public, in which case that class is visible to all classes everywhere. If a class has no modifier (the default, also known as package-private), it is visible only within its own package. 
+
+At the member level, you can also use the public modifier or no modifier (package-private) just as with top-level classes, and with the same meaning. For members, there are two additional access modifiers: private and protected. The private modifier specifies that the member can only be accessed in its own class. The protected modifier specifies that the member can only be accessed within its own package (as with package-private) and, in addition, by a subclass of its class in another package.
+
+**Tips on Choosing an Access Level:**<br> 
+- Use the most restrictive access level that makes sense for a particular member. Use private unless you have a good reason not to.
+- Avoid public fields except for constants.
+
+- **Default – No keyword required:** When no access modifier is specified for a class, method or data member – It is said to be having the default access modifier by default. Having default access modifier are accessible only within the same package.
+
+- **Private** - The methods or data members declared as private are accessible only within the class in which they are declared. Any other class of same package will not be able to access these members. Top level Classes or interface can not be declared as private, they apply only to nested classes.
+
+- **Protected:** The methods or data members declared as protected are accessible within the same package or sub classes in different packages.
+
+- **Public:** The public access modifier has the widest scope among all other access modifiers. Classes, methods or data members which are declared as public are accessible from everywhere in the program. There is no restriction on the scope of a public data members.
+
+![alt text](http://net-informations.com/java/basics/img/access-modifier.png "Constructor")
+
 #### What is data hiding?
+Encapsulation is a central design principle of OOP. It means that the internal structure and the implementation of a class should be hidden from the world. This can be done by restricting the access to these parts. Every Object Oriented language provides access modifiers to set the visibility of classes and its members (fields, constructors, and methods) separately. This is called data hiding.
+
 #### Can a static method use non-static members?
+The static modifier is used for creating static class methods and variables. The keyword static lets a method run without any instance of the class. A static method belongs to the class, so there’s no need to create an instance of the class to access it.
+
+**Characteristics of Static methods:** <br>
+- A static method is called using the class (className.methodName) as opposed to to an instance reference (new instanceOfClass = class; instanceOfClass.methodName.)
+- Static methods can’t use non-static instance variables: a static method can’t refer to any instance variables of the class. The static method doesn’t know which instance’s variable value to use.
+- Static methods can’t call non-static methods: non-static methods usually use instance variable state to affect their behaviour. Static methods can’t see instance variable state, so if you try to call a non-static method from a static method the compiler will complain regardless if the non-static method uses an instance variable or not.
+
 #### What is the difference between hiding a static method and overriding an instance method?
+**Instance Methods**<br>
+An instance method in a subclass with the same signature and return type as an instance method in the superclass overrides the superclass's method. This ability of a subclass (to override a method) allows a class to inherit from a superclass and modify behaviour as needed. The overriding method has the same name, number and type of parameters, and return type as the method that it overrides. An overriding method can also return a subtype of the type returned by the overridden method. This subtype is called a covariant return type.
+
+**Static Methods**<br>
+If a subclass defines a static method with the same signature as a static method in the superclass, then the method in the subclass hides the one in the superclass.
+
+**Differences**<br>
+- Overridden Instance Methods: the method in the subclass gets invoked. (Unless it is called from the subclass with super.myMethod.)
+- Hidden Static methods: it depends on whether it gets invoked from the superclass or the subclass.
+
 #### Define the following terms: Instantiation, Attribute, Method
+**Instantiating a Class:** The phrase "instantiating a class" means the same thing as "creating an object." When you create an object, you are creating an "instance" of a class, therefore "instantiating" a class. The new operator instantiates a class by allocating memory for a new object and returning a reference to that memory. The new operator also invokes the object constructor.
+
+**Attribute:** An attribute is another term for a field. It’s typically a public field that can be accessed directly.
+
+**Method:** A method is a collection of statements that perform some specific task and return the result to the caller. A method can perform some specific task without returning anything. A method is a block of code which only runs when it is called, and they are also known as functions. Methods allow us to reuse the code without retyping the code. In Java, every method must be part of some class which is different from languages like C, C++, and Python. A method must be declared within a class.
+
+![alt text](https://media.geeksforgeeks.org/wp-content/uploads/methods-in-java.png "method")
+
 #### Could we access a static variable (or method) from a non-static method? Why?
+Yes, a non-static method can access a static variable or call a static method in Java. There is no problem with that because of static members i.e. both static variable and static methods belongs to a class and can be called from anywhere, depending upon their access modifier.
+
+**The opposite is not exact:** you can access static members from non-static context, but you cannot access a non-static variable or method from a static method in Java.
+
 #### Could we access a non-static variable (or method) from a static method? Why?
+No. A static method can only access other static methods and variables. If we need to access a non-static variable or method from within a static method, we must first instantiate the class that the non-static method or variable belongs to.
+
 #### How many instances you have of a static variable of a given class?
+Java Language Specification states the following:
+
+If a field is declared static, there exists exactly one incarnation of the field, no matter how many instances (possibly zero) of the class may eventually be created. A static field, sometimes called a class variable, is incarnated when the class is initialized.
+
 #### Why is it not a good practice to write a lot of static methods?
+One reason that static methods aren't very OO is that interfaces and abstract classes only define non-static methods. Static methods thus don't fit very well into inheritance. Static methods do not have access to "super", which means that static methods cannot be overridden in any real sense. Actually, they can't be overridden at all, only hidden.
+
 #### What are the features of static attributes and static methods of a class? What are the benefits, when to use them?
+Static attributes are also known class attributes. They are useful for example for counting IDs for created objects. Common use for static methods is to access static variables. Another good example is the singleton pattern’s getInstance() method, which is static as well.
+
 #### What is the ‘this’ reference?
+‘this’ is a reference variable that refers to the current object. Within an instance method or a constructor, 'this' is a reference to the current object — the object whose method or constructor is being called. You can refer to any member of the current object from within an instance method or a constructor by using 'this'.
+
 #### What are base class, subclass and superclass?
+The class from which the subclass is derived is called a superclass (also a base class or a parent class).</ br>
+A class that is derived from another class is called a subclass (also a derived class, extended class, or child class). The class from which the subclass is derived is called a superclass (also a base class or a parent class). Excepting Object, which has no superclass, every class has one and only one direct superclass (single inheritance). In the absence of any other explicit superclass, every class is implicitly a subclass of Object. Classes can be derived from classes that are derived from classes that are derived from classes, and so on, and ultimately derived from the topmost class, Object. Such a class is said to be descended from all the classes in the inheritance chain stretching back to Object.
+
 #### Draw an object oriented family (as entities, with relations) on the whiteboard.
 #### Difference between overloading and overriding?
+Overloading is about same function have different signatures. Overriding is about same function, same signature but different classes connected through inheritance. Overloading is an example of compiler time polymorphism and overriding is an example of run time polymorphism.
+
+![alt text](http://cdncontribute.geeksforgeeks.org/wp-content/uploads/OverridingVsOverloading.png "overloading vs overriding")
+
 #### What are the Object Oriented Principles? Explain the concepts with realistic examples!
+**Encapsulation:** The implementation and state of each object are privately held inside a defined boundary, or class. Other objects do not have access to this class or the authority to make changes but are only able to call a list of public functions, or methods. This characteristic of data hiding provides greater program security and avoids unintended data corruption. Another way to think about encapsulation is, it is a protective shield that prevents the data from being accessed by the code outside this shield. Technically in encapsulation, the variables or data of a class is hidden from any other class and can be accessed only through any member function of own class in which they are declared. As in encapsulation, the data in a class is hidden from other classes, so it is also known as data-hiding. Encapsulation can be achieved by Declaring all the variables in the class as private and writing public methods in the class to set and get the values of variables. 
+
+Encapsulation is the mechanism of hiding of data implementation by restricting access to public methods. Instance variables are kept private and accessor methods are made public to achieve this.
+
+Az adatok és a metódusok osztályba való összezárását jelenti. Tulajdonképpen az objektum egységbezárja az állapotot (adattagok értékei) a viselkedésmóddal (műveletekkel). Következmény: az objektum állapotát csak a műveletein keresztül módosíthatjuk. Az objektum elrejti az adatait és bizonyos műveleteit. Ez azt jelenti, hogy nem tudjuk pontosan, hogy egy objektumban hogyan vannak az adatok ábrázolva, sőt a
+műveletek implementációit sem ismerjük. Az információk elrejtése az objektum biztonságát szolgálja, amelyeket csak a ellenőrzött műveleteken keresztül érhetünk el.
+
+**Abstraction:** Objects only reveal internal mechanisms that are relevant for the use of other objects, hiding any unnecessary implementation code. This concept helps developers make changes and additions over time more easily. Only the essential details are displayed to the user.The trivial or the non-essentials units are not displayed to the user. Ex: A car is viewed as a car rather than its individual components. Data Abstraction may also be defined as the process of identifying only the required characteristics of an object ignoring the irrelevant details. Consider a real-life example of a man driving a car. The man only knows that pressing the accelerators will increase the speed of car or applying brakes will stop the car but he does not know about how on pressing the accelerator the speed is actually increasing, he does not know about the inner mechanism of the car or the implementation of accelerator, brakes etc in the car. This is what abstraction is. In Java, abstraction is achieved by interfaces and abstract classes. We can achieve 100% abstraction using interfaces.
+
+Abstract means a concept or an Idea which is not associated with any particular instance. Using abstract class/Interface we express the intent of the class rather than the actual implementation. In a way, one class should not know the inner details of another in order to use it, just knowing the interfaces should be good enough. Its main goal is to handle complexity by hiding unnecessary details from the user. That enables the user to implement more complex logic on top of the provided abstraction without understanding or even thinking about all the hidden complexity. Objects in an OOP language provide an abstraction that hides the internal implementation details. Similar to the coffee machine in your kitchen, you just need to know which methods of the object are available to call and which input parameters are needed to trigger a specific operation. But you don’t need to understand how this method is implemented and which kinds of actions it has to perform to create the expected result. 
+
+Elvonatkoztatás. Segítségével privát implementációkat rejthetünk el egy nyilvános interfész mögé. 
+
+Interfész: Viselkedésmódot definiál. Gyakorlatilag egy művelethalmaz deklarációját jelenti. Ha egy osztály implementál egy adott interfészt, akkor példányai az interfészben meghatározott viselkedéssel fognak rendelkezni. Csak konstans adattagokat tartalmazhat és minden tagja nyilvános. 
+
+**Inheritance:** Relationships and subclasses between objects can be assigned, allowing developers to reuse a common logic while still maintaining a unique hierarchy. This property of OOP forces a more thorough data analysis, reduces development time and ensures a higher level of accuracy. It is the mechanism in Java by which one class is allow to inherit the features(fields and methods) of another class.
+
+Inheritances expresses “is-a” and/or “has-a” relationship between two objects. Using Inheritance, In derived classes we can reuse the code of existing super classes. In Java, concept of “is-a” is based on class inheritance (using extends) or interface implementation (using implements).
+
+Olyan osztályok között értelmezett viszony, amely segítségével egy általánosabb típusból (ősosztály) egy sajátosabb típust tudunk létrehozni (utódosztály). Az utódosztály adatokat és műveleteket (viselkedésmódot) örököl, kiegészíti ezeket saját adatokkal és műveletekkel, illetve felülírhat bizonyos műveleteket. A kód újrafelhasználásának egyik módja. Megkülönböztetünk egyszeres és többszörös örökítést.
+
+**Polymorphism:** Objects are allowed to take on more than one form depending on the context. The program will determine which meaning or usage is necessary for each execution of that object, cutting down on the need to duplicate code. Polymorphism in Java are mainly of 2 types:
+Overloading and Overriding.
+
+It means one name many forms. It is further of two types — static and dynamic. Static polymorphism is achieved using method overloading and dynamic polymorphism using method overriding. It is closely related to inheritance. We can write a code that works on the superclass, and it will work with any subclass type as well.
+
 #### What is method overloading?
+If a class has multiple methods having same name but different in parameters, it is known as Method Overloading. Overloading allows different methods to have the same name, but different signatures where the signature can differ by the number of input parameters or type of input parameters or both. Overloading is related to compile time (or static) polymorphism.
+
+Több azonos nevű, különböző szignatúrájú függvény. A függvényhívás aktuális paraméterei meghatározzák, hogy melyik függvény fog meghívódni. Ezt már a fordításidőben eldől (statikus, fordításidejű kötés).
+
+Statikus (korai) kötés - Static (Early) Binding: Fordításidejű hozzárendelése a hívott metódusnak az objektumhoz. 
+
+**Advantage of method overloading:**<br>
+Method overloading increases the readability of the program. We don’t have to create and remember different names for functions doing the same thing.
+
+**Different ways to overload the method:**<br>
+- By changing number of arguments
+- By changing the data type
+
 #### What is method overriding?
+If subclass (child class) has the same method as declared in the parent class, it is known as method overriding in Java. In other words, if a subclass provides the specific implementation of the method that has been declared by one of its parent class, it is known as method overriding.
+
+Egy osztályhierarchián belül az utódosztály újradefiniálja az ősosztály metódusát. (azonos név, azonos szignatúra). Ha ősosztály típusú mutatón vagy referencián keresztül érjük el az osztályhierarchia példányait és ezen keresztül meghívjuk a felülírt metódust, akkor futási időben dől el, hogy pontosan melyik metódus kerül meghívásra. (dinamikus, futásidejű kötés).
+
+**Usage of Java Method Overriding:**<br>
+- Method overriding is used to provide the specific implementation of a method which is already provided by its superclass.
+- Method overriding is used for runtime polymorphism
+
+**Rules for Java Method Overriding:**<br>
+- The method must have the same name as in the parent class
+- The method must have the same parameter as in the parent class.
+- There must be an IS-A relationship (inheritance).
+
 #### Explain how object oriented languages attempt to simplify memory management for Programmers.
+// TODO Java has automatic memory management, a nice and quiet garbage collector that works in the background to clean up the unused objects and free up some memory.
+
 #### Explain the “Single Responsibility” principle!
+Single Responsibility principle is a basic concept of programming, which means every class has only one task to do. That makes the code cleaner, more readable and easier to test or debug.
+
+Every module or class should have responsibility over a single part of the functionality provided by the software, and that responsibility should be entirely encapsulated by the class. A class or module should have one, and only one, reason to be changed. This principle states that if we have 2 reasons to change for a class, we have to split the functionality in two classes. Each class will handle only one responsibility and if in the future we need to make one change we are going to make it in the class which handles it. When we need to make a change in a class having more responsibilities the change might affect the other functionality related to the other responsibility of the class.
+
 #### What is an object oriented program? Explain, show.
+In object oriented programming, importance is given to data rather than just writing instructions to complete a task. An object is a thing or idea that you want to model in your program. An object can be anything, example, employee, bank account, car etc.
+
+Object-oriented programming (OOP) is a programming language model in which programs are organized around data, or objects, rather than functions and logic. An object can be defined as a data field that has unique attributes and behavior. Examples of an object can range from physical entities, such as a human being that is described by properties like name and address, down to small computer programs, such as widgets. This opposes the historical approach to programming where emphasis was placed on how the logic was written rather than how to define the data within the logic.
+
+![alt text](https://miro.medium.com/max/1510/1*szU8ngrWSXmBNPYReMyK5w.png "oop program")
+
 #### How do you make a class immutable? What do you need to watch out for?
+To create an immutable class in java, you have to do following steps:
+- Declare the class as final so it can’t be extended.
+- Make all fields private so that direct access is not allowed.
+- Don’t provide setter methods for variables
+- Make all mutable fields final so that it’s value can be assigned only once.
+- Initialize all the fields via a constructor performing deep copy.
+- Perform cloning of objects in the getter methods to return a copy rather than returning the actual object reference.
+
 #### How many instances can be created for an abstract class?
+You cannot create an instance of an abstract class because it does not have a complete implementation. The purpose of an abstract class is to function as a base for subclasses. It acts like a template, or an empty or partially empty structure, you should extend it and build on it before you can use it.
+
 
 ## Programming languages
 
